@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Trace</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div id="app">
+    <!-- Screen 1: Intro -->
+    <section id="screen-intro" class="screen active">
+        <div class="content">
+            <p class="eyebrow">Interactive data-art project</p>
+            <h1>Data Trace</h1>
+            <p class="description">
+                Your behavior will become an image.
+            </p>
+            <p class="subtext">
+                This site transforms cursor movement, clicks, pauses, and scrolling
+                into a generative behavioral portrait.
+            </p>
+            <button id="begin-btn" class="primary-btn">Begin</button>
+        </div>
+    </section>
+
+    <!-- Screen 2: Instructions -->
+    <section id="screen-instructions" class="screen">
+        <div class="content narrow">
+            <p class="eyebrow">Preparation</p>
+            <h2>Before recording</h2>
+            <p class="description">
+                For 20–30 seconds, explore the screen freely.
+            </p>
+
+            <div class="instruction-box">
+                <p>Move the cursor</p>
+                <p>Click on elements</p>
+                <p>Pause and hover</p>
+                <p>Scroll through the page</p>
+            </div>
+
+            <p class="subtext">
+                No personal data is required. Only interaction traces inside this website are recorded.
+            </p>
+
+            <div class="button-row">
+                <button id="back-btn" class="secondary-btn">Back</button>
+                <button id="start-recording-btn" class="primary-btn">Start recording</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screen 3: Recording -->
+    <section id="screen-recording" class="screen recording-screen">
+        <div class="recording-ui">
+            <div class="recording-topbar">
+                <div>
+                    <p class="eyebrow">Recording</p>
+                    <h2 class="recording-title">Interaction Space</h2>
+                </div>
+
+                <div class="recording-meta">
+                    <div class="meta-pill">
+                        Session: <span id="session-id-label">not started</span>
+                    </div>
+                    <div class="meta-pill">
+                        Time left: <span id="time-left-label">30</span>s
+                    </div>
+                </div>
+            </div>
+
+            <div id="trace-scroll-area" class="trace-scroll-area">
+                <div class="trace-stage">
+                    <div class="trace-object orb zone" data-zone="orb">
+                        <span>Orb</span>
+                    </div>
+
+                    <div class="trace-object grid zone" data-zone="grid">
+                        <span>Grid</span>
+                    </div>
+
+                    <div class="trace-object text zone" data-zone="text">
+                        <p>
+                            Invisible interface behavior becomes visible here.
+                        </p>
+                    </div>
+
+                    <div class="trace-object noise zone" data-zone="noise">
+                        <span>Noise Field</span>
+                    </div>
+
+                    <div class="trace-object pulse zone" data-zone="pulse">
+                        <span>Pulse Node</span>
+                    </div>
+
+                    <div class="trace-object diagonal zone" data-zone="diagonal">
+                        <span>Drift</span>
+                    </div>
+
+                    <div class="trace-object lower zone" data-zone="lower">
+                        <span>Scroll further</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recording-footer">
+                <p class="subtext">
+                    Explore the scene. Your movement, pauses, clicks, and scrolling are being translated into data.
+                </p>
+
+                <div class="button-row">
+                    <button id="finish-tracing-btn" class="primary-btn" disabled>Finish tracing</button>
+                    <button id="recording-back-btn" class="secondary-btn">Back</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screen 4: Generating -->
+    <section id="screen-generating" class="screen">
+        <div class="content narrow">
+            <p class="eyebrow">Processing</p>
+            <h2>Generating your trace</h2>
+            <p class="description">Tracking motion. Measuring rhythm. Building structure.</p>
+            <div class="loading-dots" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <p class="subtext" id="submit-status-text">
+                Waiting for trace submission...
+            </p>
+        </div>
+    </section>
+
+    <section id="screen-result" class="screen result-screen">
+        <div class="result-layout">
+            <div class="result-left">
+                <div class="result-card">
+                    <p class="eyebrow">Behavioral portrait</p>
+                    <h2>Your particle trace</h2>
+                    <p class="description">
+                        A generative composition built from your interaction rhythm.
+                    </p>
+
+                    <div id="portrait-canvas-wrap" class="portrait-canvas-wrap"></div>
+
+                    <div class="button-row">
+                        <button id="save-artwork-btn" class="primary-btn">Save artwork</button>
+                        <button id="save-poster-btn" class="secondary-btn">Save poster</button>
+                        <button id="restart-btn" class="secondary-btn">Start again</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-right">
+                <div class="result-card">
+                    <p class="eyebrow">Behavioral summary</p>
+                    <div id="metrics-grid" class="metrics-grid"></div>
+
+                    <div id="comparison-block" class="metrics-grid" style="margin-top:20px;">
+                        <p class="eyebrow">Comparison</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="result-right">
+        <div class="result-card">
+            <p class="eyebrow">Behavioral summary</p>
+            <div id="metrics-grid" class="metrics-grid"></div>
+
+            <div id="comparison-block" class="metrics-grid" style="margin-top:20px;">
+                <p class="eyebrow">Comparison</p>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
