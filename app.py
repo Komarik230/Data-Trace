@@ -540,7 +540,7 @@ def submit_trace():
 
 
 # =========================
-# Create necessary directories and files
+# Create necessary directories
 # =========================
 
 def create_directories():
@@ -556,8 +556,21 @@ def create_directories():
             print(f"Created directory: {directory}")
 
 
+# Create directories on startup
 create_directories()
 
+# =========================
+# Run the app
+# =========================
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+    # Check if running in production (Render sets RENDER environment variable)
+    is_production = os.environ.get('RENDER') is not None
+
+    if is_production:
+        # Production mode for Render
+        port = int(os.environ.get('PORT', 5000))
+        app.run(debug=False, host='0.0.0.0', port=port)
+    else:
+        # Local development mode
+        app.run(debug=True, host='127.0.0.1', port=5000)
