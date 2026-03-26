@@ -5,10 +5,10 @@ import random
 import sqlite3
 from datetime import datetime
 from pathlib import Path
+import os
 
 app = Flask(__name__)
 DB_PATH = "data.db"
-
 
 # =========================
 # Database
@@ -539,5 +539,25 @@ def submit_trace():
     })
 
 
+# =========================
+# Create necessary directories and files
+# =========================
+
+def create_directories():
+    """Create necessary directories for templates and static files"""
+    template_dir = os.path.join(os.path.dirname(__file__), 'templates')
+    static_dir = os.path.join(os.path.dirname(__file__), 'static')
+    css_dir = os.path.join(static_dir, 'css')
+    js_dir = os.path.join(static_dir, 'js')
+
+    for directory in [template_dir, static_dir, css_dir, js_dir]:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+            print(f"Created directory: {directory}")
+
+
+create_directories()
+
+
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
